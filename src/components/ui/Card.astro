@@ -1,0 +1,10 @@
+---
+interface Props {
+    class?: string;
+}
+
+const baseClass = 'rounded-lg p-8 border';
+---
+<div class:list={[ baseClass, Astro.props.class]}>
+    <slot />
+</div> 

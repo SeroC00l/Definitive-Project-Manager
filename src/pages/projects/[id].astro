@@ -1,0 +1,24 @@
+---
+import { projectsTable } from "@/db/schema";
+import { db } from "@/db/supabase";
+import Layout from "@/layouts/Layout.astro";
+import TasksTabs from "@/components/TasksTabs.astro";
+import { eq } from "drizzle-orm";
+
+const { id } = Astro.params;
+
+const project = await db
+  .select()
+  .from(projectsTable)
+  .where(eq(projectsTable.id, String(id)))
+  .then(([project]) => project);
+---
+
+<Layout title={project.title}>
+  <div class="p-4 flex-1">
+    <h2 class="capitalize text-2xl p-2 flex border-y">
+      {project.title}
+    </h2>
+    <TasksTabs />
+  </div>
+</Layout>

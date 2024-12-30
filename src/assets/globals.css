@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-display: "Satoshi", "sans-serif";
+  --breakpoint-3xl: 1920px;
+  --color-foreground: var(--color-zinc-100);
+  --color-background: var(--color-zinc-900);
+  --color-primary: var(--color-blue-500);
+  --color-primary-hover: var(--color-blue-600);
+  --color-muted: var(--color-zinc-700);
+  --color-secondary: var(--color-purple-500);
+  --color-secondary-hover: var(--color-purple-600);
+  --color-success: var(--color-green-500);
+  --color-success-hover: var(--color-green-600);
+  --color-error: var(--color-red-500);
+  --color-error-hover: var(--color-red-600);
+  --color-warning: var(--color-yellow-500);
+  --color-warning-hover: var(--color-yellow-600);
+}

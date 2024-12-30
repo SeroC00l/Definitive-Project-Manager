@@ -1,0 +1,52 @@
+---
+import UserIcon from "@/assets/icons/user.svg";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"button"> {
+  name: string;
+  image: string;
+  size?: number;
+}
+
+const { id, name, image, class: className, size = 8, ...props } = Astro.props;
+
+const sizeClass = `size-${size}`;
+---
+
+<sero-avatar id={id} size={size}>
+  <button
+    title={name}
+    {...props}
+    class:list={[
+      "flex items center gap-2 cursor-pointer overflow-hidden",
+      sizeClass,
+      className,
+    ]}
+  >
+    <img
+      id={`${id}Image`}
+      width={size * 4}
+      height={size * 4}
+      src={image || UserIcon.src}
+      alt={name}
+      class="rounded-full overflow-hidden aspect-square"
+    />
+  </button>
+</sero-avatar>
+
+<script>
+  class Avatar extends HTMLElement {
+    setAvatar(file: File) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const image = reader.result;
+        const avatar = this.querySelector("img");
+        if (avatar) {
+          avatar.src = image as string;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  customElements.define("sero-avatar", Avatar);
+</script>

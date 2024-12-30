@@ -1,0 +1,60 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Card from "@/components/ui/Card.astro";
+import Button, {
+  ButtonSizes,
+  ButtonVariants,
+} from "@/components/ui/Button.astro";
+import { actions } from "astro:actions";
+import Form from "@/components/ui/Form.astro";
+import EmailInput from "@/components/Inputs/Email.astro";
+import PasswordInput from "@/components/Inputs/Password.astro";
+import Input from "@/components/ui/Input.astro";
+
+const oauthResult = Astro.getActionResult(actions.auth.oauth)	
+const loginResult = Astro.getActionResult(actions.auth.login);
+
+if (loginResult?.data?.redirect) {
+  return Astro.redirect(loginResult.data.redirect);
+}
+---
+
+<Layout title="Login" hideNavBar>
+  <Card class="m-auto w-[500px] h-auto">
+    <h1 class="text-center text-4xl font-bold">Login</h1>
+    <Form
+      method="post"
+      action={actions.auth.login}
+      class="flex flex-col items-center space-y-5"
+    >
+      <EmailInput />
+      <PasswordInput forgotPassword />
+      <Button
+        variant={ButtonVariants.Primary}
+        size={ButtonSizes.LG}
+        class="mt-2"
+      >
+        Login
+      </Button>
+    </Form>
+    <p class="text-center">or</p>
+    <footer class="flex justify-center gap-4 p-4">
+      <Button action={actions.auth.oauth} variant={ButtonVariants.Secondary}>
+        <Input type="hidden" name="provider" value="google" />
+        G
+      </Button>
+      <Button action={actions.auth.oauth} variant={ButtonVariants.Secondary}>
+        <Input type="hidden" name="provider" value="github" />
+        GI
+      </Button>
+    </footer>
+  </Card>
+</Layout>
+{
+  oauthResult?.data?.redirect &&
+  <script is:inline define:vars={{ redirect: oauthResult.data.redirect }}>
+    if (redirect) {
+      window.location.href = redirect;
+    }
+  </script>
+}

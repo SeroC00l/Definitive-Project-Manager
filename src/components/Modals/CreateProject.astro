@@ -1,0 +1,15 @@
+---
+import { actions } from "astro:actions";
+import Button from "../ui/Button.astro";
+import Dialog from "../ui/Dialog.astro";
+import Form from "../ui/Form.astro";
+import Input from "../ui/Input.astro";
+---
+
+<Dialog id="creatProjectModal" title="Create Project">
+  <Form class="flex flex-col" action={actions.projects.create}>
+    <Input name="title" />
+    <textarea name="description"></textarea>
+    <Button>Create Project</Button>
+  </Form>
+</Dialog>

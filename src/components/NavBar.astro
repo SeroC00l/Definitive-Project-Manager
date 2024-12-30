@@ -1,0 +1,30 @@
+---
+import ProjectsIcon from "@/assets/icons/briefcase-business.svg";
+import { projectsTable } from "@/db/schema";
+import Button from "./ui/Button.astro";
+import { db } from "@/db/supabase";
+import { eq } from "drizzle-orm";
+import { PROJECTS_ROUTE } from "@/constants/routes";
+import CreateProjectModal from "./Modals/CreateProject.astro";
+
+const user = Astro.locals.user;
+const projects = await db
+  .select()
+  .from(projectsTable)
+  .where(eq(projectsTable.user_id, user.id));
+---
+
+<nav class="flex flex-col p-4 w-[250px] gap-2">
+  <a href={PROJECTS_ROUTE} class="border-y p-2 flex gap-2 text-2xl items-center capitalize">
+    <ProjectsIcon /> {PROJECTS_ROUTE}
+  </a>
+  {
+    projects.map((project) => (
+      <a href={`/${PROJECTS_ROUTE}/${project.id}`} class="hover:underline p-2">
+        {project.title}
+      </a>
+    ))
+  }
+  <Button onclick="creatProjectModal.showModal()"> new project </Button>
+  <CreateProjectModal />
+</nav>

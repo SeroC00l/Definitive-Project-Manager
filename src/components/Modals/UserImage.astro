@@ -1,0 +1,36 @@
+---
+import Avatar from "@/components/ui/Avatar.astro";
+import Button, { ButtonVariants } from "@/components/ui/Button.astro";
+import Dialog from "@/components/ui/Dialog.astro";
+import Form from "@/components/ui/Form.astro";
+import Input, { InputVariants } from "@/components/ui/Input.astro";
+import { actions } from "astro:actions";
+import { SB_AVATARS_FOLDER } from "@/constants/routes";
+
+const user = Astro.locals.user;
+---
+
+<Dialog id="userImageModal" title="Change your profile picture" class="h-fit">
+  <div class="flex gap-4 p-4">
+    <Avatar
+      id="userAvatar"
+      name={user.user_metadata.name}
+      image={`${SB_AVATARS_FOLDER}/${user.id}`}
+      onclick="image.click()"
+      size={20}
+    />
+    <Form
+      class="flex flex-col gap-4 items-center"
+      action={actions.user.profile}
+    >
+      <Input
+        id="image"
+        name="image"
+        type="file"
+        variant={InputVariants.Primary}
+        oninput="userAvatar.setAvatar(event.target.files[0])"
+      />
+      <Button variant={ButtonVariants.Primary}>Save</Button>
+    </Form>
+  </div>
+</Dialog>

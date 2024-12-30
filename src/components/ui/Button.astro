@@ -1,0 +1,83 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { SafeResult } from "astro:actions";
+import Form from "./Form.astro";
+
+export enum ButtonVariants {
+  Default = "default",
+  Primary = "primary",
+  Secondary = "secondary",
+  Ghost = "ghost",
+  Error = "error",
+  Success = "success",
+  Warning = "warning",
+}
+
+export enum ButtonSizes {
+  SM = "sm",
+  MD = "md",
+  LG = "lg",
+}
+
+interface Props extends HTMLAttributes<"button"> {
+  class?: string;
+  variant?: ButtonVariants;
+  size?: ButtonSizes;
+  action?: ((input: any) => Promise<SafeResult<any, unknown>>) & {
+    queryString: string;
+    orThrow: (input: any) => Promise<any>;
+  };
+}
+
+const baseClass = [
+  // Layout & Sizing
+  "rounded-lg",
+  // Spacing
+  "py-2",
+  "px-4",
+  // Typography
+  "font-bold",
+  // Interactivity
+  "cursor-pointer",
+  "select-none",
+  // Transitions
+  "transition-colors",
+  "duration-300",
+];
+
+const variant = {
+  [ButtonVariants.Default]: [
+    "bg-foreground",
+    "text-background",
+    "hover:opacity-90",
+  ],
+  [ButtonVariants.Primary]: ["bg-primary", "hover:bg-primary-hover"],
+  [ButtonVariants.Secondary]: ["bg-secondary", "hover:bg-secondary-hover"],
+  [ButtonVariants.Error]: ["bg-error", "hover:bg-error-hover"],
+  [ButtonVariants.Success]: ["bg-green-500", "hover:bg-success-hover"],
+  [ButtonVariants.Warning]: ["bg-yellow-500", "hover:bg-warning-hover"],
+  [ButtonVariants.Ghost]: ["hover:bg-muted"],
+}[Astro.props.variant || ButtonVariants.Default];
+
+const size = {
+  [ButtonSizes.SM]: "w-fit",
+  [ButtonSizes.MD]: "w-36",
+  [ButtonSizes.LG]: "w-full",
+}[Astro.props.size || ButtonSizes.SM];
+
+const { class: className, action, ...props } = Astro.props;
+---
+
+{
+  action ? (
+    <Form action={action}>
+      <button {...props} class:list={[baseClass, variant, size, className]}>
+        <slot />
+      </button>
+    </Form>
+  ) : (
+    <button {...props} class:list={[baseClass, variant, size, className]}>
+      <slot />
+    </button>
+  )
+}

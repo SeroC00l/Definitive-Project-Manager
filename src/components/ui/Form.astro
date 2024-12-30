@@ -1,0 +1,87 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import type { SafeResult } from "astro:actions";
+import { isInputError } from "astro:actions";
+
+interface Props extends Omit<HTMLAttributes<"form">, "action"> {
+  action?: ((input: any) => Promise<SafeResult<any, unknown>>) & {
+    queryString: string;
+    orThrow: (input: any) => Promise<any>;
+  };
+  values?: Record<string, string | string[]>;
+  errors?: Record<string, string | string[]>;
+}
+
+const { action, values, ...props } = Astro.props;
+
+const result = action ? Astro.getActionResult(action) : undefined;
+const errors = isInputError(result?.error) ? result.error.fields : {};
+---
+
+<sero-form errors={JSON.stringify(errors)} values={JSON.stringify(values)} class="w-full">
+  <form {...props} action={action?.queryString} method="post">
+    <slot />
+  </form>
+</sero-form>
+
+<script>
+  export class SeroForm extends HTMLElement {
+    static formAssociated = true;
+
+    constructor() {
+      super();
+      this.attachInternals();
+      this.errors = JSON.parse(this.getAttribute("errors") || "{}");
+      this.values = JSON.parse(this.getAttribute("values") || "{}");
+    }
+
+    get values() {
+      const formElements = this.querySelectorAll("input, select, textarea");
+      const values: Record<string, string> = {};
+      formElements.forEach((element) => {
+        if (
+          element instanceof HTMLInputElement ||
+          element instanceof HTMLSelectElement ||
+          element instanceof HTMLTextAreaElement
+        ) {
+          if (element.name) {
+            values[element.name] = element.value;
+          }
+        }
+      });
+      return values;
+    }
+
+    get errors() {
+      const errorElements = this.querySelectorAll(".error");
+      const errors: Record<string, string> = {};
+      errorElements.forEach((element) => {
+        if (element instanceof HTMLElement && element.dataset.errorFor) {
+          errors[element.dataset.errorFor] = String(element.textContent);
+        }
+      });
+      return errors;
+    }
+
+    set values(values: Record<string, string>) {
+      Object.entries(values).forEach(([key, value]) => {
+        const inputElement = this.querySelector(`[name=${key}]`);
+        if (inputElement instanceof HTMLInputElement) {
+          inputElement.value = value;
+        }
+      });
+    }
+
+    set errors(errors: Record<string, string | string[]>) {
+      Object.entries(errors).forEach(([key, value]) => {
+        const errorElement = this.querySelector(`[data-error-for=${key}]`);
+        if (errorElement) {
+          errorElement.textContent = Array.isArray(value)
+            ? value.join(", ")
+            : value;
+        }
+      });
+    }
+  }
+  customElements.define("sero-form", SeroForm);
+</script>

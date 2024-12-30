@@ -1,0 +1,26 @@
+---
+import { SB_AVATARS_FOLDER } from "@/constants/routes";
+import UserImageModal from "./Modals/UserImage.astro";
+import Avatar from "./ui/Avatar.astro";
+import NameInput from "./Inputs/Name.astro";
+import EmailInput from "./Inputs/Email.astro";
+import Form from "./ui/Form.astro";
+import Button, { ButtonVariants } from "./ui/Button.astro";
+
+const user = Astro.locals.user;
+---
+
+<div class="flex p-16 gap-4 w-[600px]">
+  <Avatar
+    onclick="userImageModal.showModal()"
+    name={user.user_metadata.name}
+    image={`${SB_AVATARS_FOLDER}/${user.id}`}
+    size={20}
+  />
+  <Form class="flex flex-col gap-4 items-center" values={{ email: user.email, name: user.user_metadata.name }}>
+    <NameInput />
+    <EmailInput disabled />
+    <Button variant={ButtonVariants.Primary}> save </Button>
+  </Form>
+  <UserImageModal />
+</div>

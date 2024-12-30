@@ -1,0 +1,64 @@
+---
+
+---
+
+<div class="tabs">
+  <div role="tablist" aria-label="Sero Tabs">
+    <slot />
+  </div>
+</div>
+
+<script>
+  const tabsLists = document.querySelectorAll('[role="tablist"]');
+
+  tabsLists.forEach((tabList) => {
+    const tabs = tabList.querySelectorAll<HTMLElement>('[role="tab"]');
+    const tabGroup = tabList.parentNode as HTMLElement;
+
+    // Add a click event handler to each tab
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", (e) =>
+        changeTabs(e, tabList as HTMLElement, tabGroup),
+      );
+    });
+
+    // Enable arrow navigation between tabs in the tab list
+    let tabFocus = 0;
+
+    tabList.addEventListener("keydown", (e) => {
+      if (e instanceof KeyboardEvent) {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          tabs[tabFocus].setAttribute("tabindex", "-1");
+          if (e.key === "ArrowRight") {
+            tabFocus = (tabFocus + 1) % tabs.length;
+          } else if (e.key === "ArrowLeft") {
+            tabFocus = (tabFocus - 1 + tabs.length) % tabs.length;
+          }
+          tabs[tabFocus].setAttribute("tabindex", "0");
+          tabs[tabFocus].focus();
+        }
+      }
+    });
+  });
+
+  function changeTabs(e: Event, tabList: HTMLElement, tabGroup: HTMLElement) {
+    const targetTab = e.target as HTMLElement;
+    // Remove all current selected tabs
+    tabList
+      .querySelectorAll('[aria-selected="true"]')
+      .forEach((t) => t.setAttribute("aria-selected", "false"));
+    // Set this tab as selected
+    targetTab.setAttribute("aria-selected", "true");
+    // Hide all tab panels
+    tabGroup
+      .querySelectorAll('[role="tabpanel"]')
+      .forEach((p) => p.setAttribute("hidden", "true"));
+    // Show the selected panel
+    const selectedPanel = tabGroup.querySelector(
+      `#${targetTab.getAttribute("aria-controls")}`,
+    );
+    if (selectedPanel) {
+      selectedPanel.removeAttribute("hidden");
+    }
+  }
+</script>

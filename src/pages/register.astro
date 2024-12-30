@@ -1,0 +1,41 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Card from "@/components/ui/Card.astro";
+import Button, {
+  ButtonSizes,
+  ButtonVariants,
+} from "@/components/ui/Button.astro";
+import { actions } from "astro:actions";
+import Form from "@/components/ui/Form.astro";
+import EmailInput from "@/components/Inputs/Email.astro";
+import PasswordInput from "@/components/Inputs/Password.astro";
+import NameInput from "@/components/Inputs/Name.astro";
+
+const registerResult = Astro.getActionResult(actions.auth.register);
+
+if (registerResult?.data?.redirect) {
+  return Astro.redirect(registerResult.data.redirect);
+}
+---
+
+<Layout title="Register" hideNavBar>
+  <Card class="m-auto w-[500px]">
+    <h1 class="text-center text-4xl font-bold">Register</h1>
+    <Form
+      method="post"
+      action={actions.auth.register}
+      class="flex flex-col items-center gap-4"
+    >
+      <NameInput />
+      <EmailInput />
+      <PasswordInput />
+      <Button
+        variant={ButtonVariants.Primary}
+        size={ButtonSizes.LG}
+        class="mt-2"
+      >
+        Register
+      </Button>
+    </Form>
+  </Card>
+</Layout>

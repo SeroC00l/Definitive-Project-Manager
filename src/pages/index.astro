@@ -1,11 +1,12 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Project Manager" hideNavBar>
+  <section class="w-4xl p-4 m-auto">
+    <h2 class="text-center text-5xl font-bold">Welcome to Project Manager</h2>
+    <p class="mt-4 text-center">
+      This is a simple project manager application built with Astro, Tailwind CSS and Supabase.
+    </p>
+  </section>
 </Layout>

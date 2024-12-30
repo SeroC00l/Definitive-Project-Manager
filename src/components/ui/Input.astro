@@ -1,0 +1,88 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+export enum InputVariants {
+  Default = "default",
+  Primary = "primary",
+  Secondary = "secondary",
+  Error = "error",
+  Success = "success",
+  Warning = "warning",
+}
+
+interface Props extends HTMLAttributes<"input"> {
+  name: string;
+  label?: string;
+  variant?: InputVariants;
+}
+
+const { label, name, variant = InputVariants.Default, type, ...props } = Astro.props;
+
+const variantClass = {
+  [InputVariants.Default]: [
+    "border-zinc-300",
+    "hover:border-zinc-400",
+    "focus-within:border-foreground",
+  ].join(" "),
+  [InputVariants.Primary]: [
+    "border-primary",
+    "hover:border-primary-hover",
+    "focus-within:border-primary-hover",
+  ].join(" "),
+  [InputVariants.Secondary]: [
+    "border-secondary",
+    "hover:border-secondary-hover",
+    "focus-within:border-secondary-hover",
+  ].join(" "),
+  [InputVariants.Error]: [
+    "border-error",
+    "hover:border-error-hover",
+    "focus-within:border-error-hover",
+  ].join(" "),
+  [InputVariants.Success]: [
+    "border-green-500",
+    "hover:border-green-600",
+    "focus-within:border-green-600",
+  ].join(" "),
+  [InputVariants.Warning]: [
+    "border-warning",
+    "hover:border-warning-hover",
+    "focus-within:border-warning-hover",
+  ].join(" "),
+}[variant];
+
+const inputId = props.id || crypto.randomUUID();
+---
+
+<div class:list={["flex flex-col w-full gap-2", type === "hidden" && "hidden"]}>
+  <label class="px-2 font-bold capitalize" for={inputId}>{label || name}</label>
+  <div
+    class:list={[
+      "w-full flex items-center border-2 rounded-md transition-colors duration-300",
+      variantClass,
+    ]}
+  >
+    <slot name="left" />
+    <input
+      {...props}
+      id={inputId}
+      name={name}
+      type=	{type}
+      class="flex-1 p-2 outline-none disabled:text-muted"
+    />
+    <slot name="right" />
+  </div>
+  <small 
+    class="px-2 text-error empty:hidden" 
+    data-error-for={name}
+  ></small>
+  <slot />
+</div>
+
+<style>
+  input:-webkit-autofill {
+    transition:
+      background-color 5000s ease-in-out 0s,
+      color 5000s ease-in-out 0s;
+  }
+</style>

@@ -1,0 +1,9 @@
+---
+import Input, { InputVariants } from '@/components/ui/Input.astro'
+import UserIcon from '@/assets/icons/user.svg'
+
+---
+
+<Input variant={InputVariants.Primary} name="name" placeholder="John Doe">
+    <UserIcon class="mr-4" slot="right" />
+</Input>

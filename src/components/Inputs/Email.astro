@@ -1,0 +1,8 @@
+---
+import Input, { InputVariants } from "@/components/ui/Input.astro";
+import EmailIcon from "@/assets/icons/mail.svg";
+---
+
+<Input {...Astro.props} variant={InputVariants.Primary} type="email" name="email" placeholder="example@example.com">
+  <EmailIcon class="mr-4" slot="right" />
+</Input>

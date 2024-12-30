@@ -1,0 +1,30 @@
+---
+import { PROFILE_ROUTE } from "@/constants/routes";
+import Logout from "./Buttons/logout.astro";
+
+const user = Astro.locals.user;
+---
+
+<style>
+  #main-menu {
+    position-anchor: --avatar-button;
+    top: calc(anchor(bottom) + calc(var(--spacing) * 4));
+    left: calc(anchor(left) - calc(var(--spacing) * 40));
+  }
+</style>
+
+<div
+  popover
+  id="main-menu"
+  class="w-48 bg-background text-foreground shadow-lg rounded-lg p-4 border"
+>
+  <h2 class="border-b pb-2 mb-2 text-lg font-bold">
+    menu
+  </h2>
+  <a href={PROFILE_ROUTE}>{PROFILE_ROUTE}</a>
+  <hr/>
+  <div>
+    <Logout />
+  </div>
+</div>
+

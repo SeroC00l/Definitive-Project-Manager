@@ -1,0 +1,30 @@
+---
+import { BOARD_ROUTE, LOGIN_ROUTE, REGISTER_ROUTE, INDEX_ROUTE, SB_AVATARS_FOLDER } from "@/constants/routes";
+import Avatar from "./ui/Avatar.astro";
+import MainMenu from "./MainMenu.astro";
+
+const isLoggedIn = Astro.locals.isLoggedIn;
+const user = Astro.locals.user;
+---
+
+<header class="flex justify-between items-center p-4 capitalize">
+    <a href={isLoggedIn ? BOARD_ROUTE : INDEX_ROUTE} class="flex items-center gap-2">
+        <h1 class="inline text-3xl font-bold">project manager</h1>
+    </a> 
+    <nav class="flex gap-4">
+        {
+            (isLoggedIn && user) ? (
+                <Avatar 
+                    name={user.user_metadata.name} 
+                    image={`${SB_AVATARS_FOLDER}/${user.id}`}
+                    popovertarget="main-menu" 
+                    style="anchor-name: --avatar-button;"
+                 />
+            ) : (
+                    <a href={LOGIN_ROUTE}>{LOGIN_ROUTE}</a>
+                    <a href={REGISTER_ROUTE}>{REGISTER_ROUTE}</a>
+            )
+        }
+        { user && <MainMenu user={user} /> }
+    </nav>
+</header>
