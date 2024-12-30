@@ -1,11 +1,11 @@
-// @ts-check
 import { defineConfig, envField } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
-import vercel from "@astrojs/vercel";
+import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
   output: "server",
+  adapter: cloudflare(),
   vite: {
     plugins: [tailwindcss()],
   },
@@ -16,18 +16,13 @@ export default defineConfig({
       DATABASE_URL: envField.string({ context: "server", access: "secret" }),
     },
   },
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
-    },
-  }),
   experimental: {
     responsiveImages: true,
     svg: {
       mode: "sprite",
     },
     session: {
-      driver: "supabase",
+      driver: "cloudflare-kv-binding",
     },
   },
 });
